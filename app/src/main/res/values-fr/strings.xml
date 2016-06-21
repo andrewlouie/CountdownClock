@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Countdown Clock</string>
+    <string name="about">Sur</string>
+    <string name="bgcolour">Couleur d\'arrière-plan</string>
+    <string name="blue">Bleu</string>
+    <string name="camera">Caméra</string>
+    <string name="cancel">Annuler</string>
+    <string name="colours">Couleurs</string>
+    <string name="confirmdelete"> Êtes-vous sûr</string>
+    <string name="date">Date</string>
+    <string name="days">Journées</string>
+    <string name="delete">Effacer</string>
+    <string name="export">Exportation</string>
+    <string name="exported">Exporté</string>
+    <string name="exporttitle">Succès à l\'exportation</string>
+    <string name="fontcolour"> Couleur de la police</string>
+    <string name="fonts">Polices</string>
+    <string name="gallery">Galerie</string>
+    <string name="green">Vert</string>
+    <string name="hours">Heures</string>
+    <string name="importpic">Importer</string>
+    <string name="minutes">Minutes</string>
+    <string name="months">Mois</string>
+    <string name="newevent">Nouvel évènement</string>
+    <string name="notime"> Pas de temps spécifique</string>
+    <string name="permissionneeded"> L\'application a besoin de l\'autorisation d\' accéder au stockage externe pour que</string>
+    <string name="permissiontitle"> Permission nécessaire</string>
+    <string name="presets">Presets</string>
+    <string name="red">Rouge</string>
+    <string name="seconds">Secondes</string>
+    <string name="share">Partager</string>
+    <string name="time">Temps </string>
+    <string name="title">Entrez le titre ici</string>
+    <string name="transparency">Transparence</string>
+    <string name="until">Jusqu\'à</string>
+    <string name="watermark">Filigrane</string>
+    <string name="weeks">Semaines</string>
+    <string name="years">Années</string>
+    <string name="yes">Oui</string>
+    <string name="byme">par Andrew Aaron</string>
+</resources>

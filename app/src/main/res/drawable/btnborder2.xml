@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <layer-list>
+            <item>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/buttonBg" />
+                <padding android:bottom="7dp" android:left="7dp" android:right="7dp" android:top="7dp" />
+                <stroke android:width="10dp" android:color="@android:color/transparent" />
+            </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/buttonBg" />
+                    <stroke android:width="1dp" android:color="@android:color/black" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/buttonBg" />
+                    <padding android:bottom="7dp" android:left="7dp" android:right="7dp" android:top="7dp" />
+                    <stroke android:width="10dp" android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <item>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/buttonBg" />
+                <padding android:bottom="7dp" android:left="7dp" android:right="7dp" android:top="7dp" />
+                <stroke android:width="3dp" android:color="@color/colorAccent" />
+            </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>
