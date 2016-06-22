@@ -1,6 +1,7 @@
 package com.andrewaarondev.countdownclock;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,9 +36,9 @@ public class MyViewHolder {
 
     TextView getTimeLeft() { return(timeleft); }
 
-    void populateFrom(Countdown countdown) {
+    void populateFrom(Countdown countdown, Resources r) {
         getName().setText(countdown.getTitle());
-        String test = Helpers.getDateDifference(Calendar.getInstance(),countdown.getDate(),countdown.isNoSpecificTime());
+        String test = Helpers.getDateDifference(Calendar.getInstance(), countdown.getDate(), countdown.isNoSpecificTime(), r);
         getTimeLeft().setText(test);
         Picasso.with(ctxt).load(Helpers.validUri(path,countdown.getFilename())).error(R.raw.sunset).noFade().centerCrop().resize(150,150).into(getThumb());
     }

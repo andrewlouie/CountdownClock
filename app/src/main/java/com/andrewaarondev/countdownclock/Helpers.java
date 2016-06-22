@@ -2,7 +2,10 @@ package com.andrewaarondev.countdownclock;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -15,9 +18,15 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,7 +40,21 @@ public class Helpers {
     public static final int SERIF = 6;
     public static final int SERIF_MONOSPACE = 7;
 
-    public static String getDateDifference(Calendar dateFrom, Calendar dateTo, boolean withoutTime) {
+    public static String getDateDifference(Calendar dateFrom, Calendar dateTo, boolean withoutTime, Resources r) {
+        String y = " " + r.getString(R.string.year) + " ";
+        String m = " " + r.getString(R.string.month) + " ";
+        String w = " " + r.getString(R.string.week) + " ";
+        String d = " " + r.getString(R.string.day) + " ";
+        String h = " " + r.getString(R.string.hour) + " ";
+        String mi = " " + r.getString(R.string.minute) + " ";
+        String s = " " + r.getString(R.string.second) + " ";
+        String ys = " " + r.getString(R.string.years) + " ";
+        String ms = " " + r.getString(R.string.months) + " ";
+        String ws = " " + r.getString(R.string.weeks) + " ";
+        String ds = " " + r.getString(R.string.days) + " ";
+        String hs = " " + r.getString(R.string.hours) + " ";
+        String mis = " " + r.getString(R.string.minutes) + " ";
+        String ss = " " + r.getString(R.string.seconds) + " ";
         String diff = " ";
         dateTo.set(Calendar.SECOND, 0);
         dateTo.set(Calendar.MILLISECOND, 0);
@@ -42,21 +65,21 @@ public class Helpers {
         PeriodFormatter formatter;
         if (withoutTime) {
             formatter = new PeriodFormatterBuilder()
-                    .appendYears().appendSuffix(" year ", " years ")
-                    .appendMonths().appendSuffix(" month ", " months ")
-                    .appendWeeks().appendSuffix(" week ", " weeks ")
-                    .appendDays().appendSuffix(" day ", " days ")
+                    .appendYears().appendSuffix(y, ys)
+                    .appendMonths().appendSuffix(m, ms)
+                    .appendWeeks().appendSuffix(w, ws)
+                    .appendDays().appendSuffix(d, ds)
                     .printZeroNever()
                     .toFormatter();
         } else {
             formatter = new PeriodFormatterBuilder()
-                    .appendYears().appendSuffix(" year ", " years ")
-                    .appendMonths().appendSuffix(" month ", " months ")
-                    .appendWeeks().appendSuffix(" week ", " weeks ")
-                    .appendDays().appendSuffix(" day ", " days ")
-                    .appendHours().appendSuffix(" hour ", " hours ")
-                    .appendMinutes().appendSuffix(" minute ", " minutes ")
-                    .appendSeconds().appendSuffix(" second ", " seconds ")
+                    .appendYears().appendSuffix(y, ys)
+                    .appendMonths().appendSuffix(m, ms)
+                    .appendWeeks().appendSuffix(w, ws)
+                    .appendDays().appendSuffix(d, ds)
+                    .appendHours().appendSuffix(h, hs)
+                    .appendMinutes().appendSuffix(mi, mis)
+                    .appendSeconds().appendSuffix(s, ss)
                     .printZeroNever()
                     .toFormatter();
         }
@@ -181,7 +204,7 @@ public class Helpers {
 
         public void run() {
             InputStream in = inputStream;
-            OutputStream out;
+            OutputStream out = null;
             try {
                 //create output directory if it doesn't exist
                 File dir = new File(outputPath);
@@ -190,20 +213,45 @@ public class Helpers {
                 }
                 if (in == null) in = new FileInputStream(inputPath + "/" + inputFile);
                 out = new FileOutputStream(outputPath + "/" + newFileName);
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
+                //BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap bitmap = BitmapFactory.decodeStream(in);
+                int max = getMaxTextureSize();
+                //very high resolution images need to be resized:
+                Bitmap scaled;
+                if (bitmap.getWidth() > max || bitmap.getHeight() > max) {
+                    if (bitmap.getWidth() <= bitmap.getHeight()) {
+                        int nw = bitmap.getWidth() * ((max) / bitmap.getHeight());
+                        scaled = Bitmap.createScaledBitmap(bitmap, nw, max, true);
+                    } else {
+                        int nh = bitmap.getHeight() * ((max) / bitmap.getHeight());
+                        scaled = Bitmap.createScaledBitmap(bitmap, max, nh, true);
+                    }
+                } else {
+                    scaled = bitmap;
                 }
-                in.close();
-                in = null;
-                // write the output file
-                out.flush();
-                out.close();
-                out = null;
+                scaled.compress(Bitmap.CompressFormat.PNG, 100, out);
             } catch (Exception e) {
                 Log.e("tag", e.getMessage());
+                e.printStackTrace();
             } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                        in = null;
+                    }
+                } catch (IOException ex) {
+                    Log.w("tag", "Something went wrong");
+                }
+                try {
+                    // write the output file
+                    if (out != null) {
+                        out.flush();
+                        out.close();
+                        out = null;
+                    }
+                } catch (IOException ex) {
+                    Log.w("tag", "Something went wrong");
+                }
                 EventBus.getDefault().postSticky(new FileCopiedEvent(id));
             }
         }
@@ -263,5 +311,45 @@ public class Helpers {
                 return "fonts/CutiveMono-Regular.ttf";
         }
         return "";
+    }
+
+    public static int getMaxTextureSize() {
+        // Safe minimum default size
+        final int IMAGE_MAX_BITMAP_DIMENSION = 2048;
+
+        // Get EGL Display
+        EGL10 egl = (EGL10) EGLContext.getEGL();
+        EGLDisplay display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+
+        // Initialise
+        int[] version = new int[2];
+        egl.eglInitialize(display, version);
+
+        // Query total number of configurations
+        int[] totalConfigurations = new int[1];
+        egl.eglGetConfigs(display, null, 0, totalConfigurations);
+
+        // Query actual list configurations
+        EGLConfig[] configurationsList = new EGLConfig[totalConfigurations[0]];
+        egl.eglGetConfigs(display, configurationsList, totalConfigurations[0], totalConfigurations);
+
+        int[] textureSize = new int[1];
+        int maximumTextureSize = 0;
+
+        // Iterate through all the configurations to located the maximum texture size
+        for (int i = 0; i < totalConfigurations[0]; i++) {
+            // Only need to check for width since opengl textures are always squared
+            egl.eglGetConfigAttrib(display, configurationsList[i], EGL10.EGL_MAX_PBUFFER_WIDTH, textureSize);
+
+            // Keep track of the maximum texture size
+            if (maximumTextureSize < textureSize[0])
+                maximumTextureSize = textureSize[0];
+        }
+
+        // Release
+        egl.eglTerminate(display);
+
+        // Return largest texture size found, or default
+        return Math.max(maximumTextureSize, IMAGE_MAX_BITMAP_DIMENSION);
     }
 }

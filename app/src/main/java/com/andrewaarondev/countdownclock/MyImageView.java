@@ -76,33 +76,33 @@ public class MyImageView extends ImageView {
         int countFields = 0;
         if (ri.getYears() > 0) {
             countFields++;
-            testString.add(getResources().getString(R.string.years));
+            testString.add((ri.getYears() == 1 ? getResources().getString(R.string.year) : getResources().getString(R.string.years)));
         }
         if (ri.getMonths() > 0) {
             countFields++;
-            testString.add(getResources().getString(R.string.months));
+            testString.add((ri.getMonths() == 1 ? getResources().getString(R.string.month) : getResources().getString(R.string.months)));
         }
         if (ri.getWeeks() > 0) {
             countFields++;
-            testString.add(getResources().getString(R.string.weeks));
+            testString.add((ri.getWeeks() == 1 ? getResources().getString(R.string.week) : getResources().getString(R.string.weeks)));
         }
         if (ri.getDays() > 0) {
             countFields++;
-            testString.add(getResources().getString(R.string.days));
+            testString.add((ri.getDays() == 1 ? getResources().getString(R.string.day) : getResources().getString(R.string.days)));
 
         }
         if (!cd.isNoSpecificTime()) {
             if (ri.getHours() > 0) {
                 countFields++;
-                testString.add(getResources().getString(R.string.hours));
+                testString.add((ri.getHours() == 1 ? getResources().getString(R.string.hour) : getResources().getString(R.string.hours)));
             }
             if (ri.getMinutes() > 0) {
                 countFields++;
-                testString.add(getResources().getString(R.string.minutes));
+                testString.add((ri.getMinutes() == 1 ? getResources().getString(R.string.minute) : getResources().getString(R.string.minutes)));
             }
             if (ri.getSeconds() > 0) {
                 countFields++;
-                testString.add(getResources().getString(R.string.seconds));
+                testString.add((ri.getSeconds() == 1 ? getResources().getString(R.string.second) : getResources().getString(R.string.seconds)));
             }
         }
         if (countFields == 0) return;

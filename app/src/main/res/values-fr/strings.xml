@@ -39,4 +39,11 @@
     <string name="years">Années</string>
     <string name="yes">Oui</string>
     <string name="byme">par Andrew Aaron</string>
+    <string name="day">Journée</string>
+    <string name="hour">Heure</string>
+    <string name="minute">Minute</string>
+    <string name="second">Seconde</string>
+    <string name="month">Mois</string>
+    <string name="week">Semaine</string>
+    <string name="year">An</string>
 </resources>

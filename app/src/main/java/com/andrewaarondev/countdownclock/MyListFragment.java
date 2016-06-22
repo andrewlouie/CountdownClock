@@ -103,7 +103,7 @@ public class MyListFragment extends
                 wrapper = (MyViewHolder) convertView.getTag();
             }
 
-            wrapper.populateFrom(getItem(position));
+            wrapper.populateFrom(getItem(position), getResources());
 
             return (convertView);
         }
@@ -116,7 +116,7 @@ public class MyListFragment extends
                 if (countdowns != null) {
                     String[] newtimes = new String[countdowns.size()];
                     for (int i = 0; i < countdowns.size(); i++) {
-                        newtimes[i] = Helpers.getDateDifference(Calendar.getInstance(), countdowns.get(i).getDate(),countdowns.get(i).isNoSpecificTime());
+                        newtimes[i] = Helpers.getDateDifference(Calendar.getInstance(), countdowns.get(i).getDate(), countdowns.get(i).isNoSpecificTime(), getResources());
                     }
                     publishProgress(newtimes);
                 }

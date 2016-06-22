@@ -255,7 +255,7 @@ public class DetailsFragment extends Fragment implements
             title.setText(cd.getTitle());
             title.clearFocus();
             imgView.setParams(cd);
-            Picasso.with(getActivity().getBaseContext()).load(Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename())).error(R.raw.sunset).noFade().into(imgView);
+            Picasso.with(getActivity().getBaseContext()).load(Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename())).error(R.drawable.loading).noFade().into(imgView);
             result.findViewById(R.id.btn_watermark).setSelected(cd.isWatermark());
             Button btn_import = (Button) result.findViewById(R.id.btn_import);
             Button btn_colours = (Button) result.findViewById(R.id.btn_colour);
@@ -693,7 +693,7 @@ public class DetailsFragment extends Fragment implements
         File file = new File(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename());
         Picasso picasso = Picasso.with(getActivity().getBaseContext());
         picasso.invalidate(file);
-        picasso.load(file).into(imgView);
+        picasso.load(file).error(R.drawable.loading).into(imgView);
     }
 
     @Override

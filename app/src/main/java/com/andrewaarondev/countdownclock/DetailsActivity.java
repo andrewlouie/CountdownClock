@@ -31,17 +31,17 @@ public class DetailsActivity extends AppCompatActivity {
             "com.andrewaarondev.android.countdownclock.EXTRA_COUNTDOWN";
     private DetailsFragment details = null;
     private static Countdown cd = null;
-    private Intent shareIntent=new Intent(Intent.ACTION_SEND);
+    private Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details, menu);
-        MenuItem item=menu.findItem(R.id.share);
+        MenuItem item = menu.findItem(R.id.share);
 
         ShareActionProvider share = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         Uri uri = Uri.fromFile(new File(getExternalCacheDir(), MainActivity.SHARE_FILE_NAME + ".png"));
-        shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         share.setShareIntent(shareIntent);
         return (super.onCreateOptionsMenu(menu));

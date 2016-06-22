@@ -6,4 +6,5 @@
     <color name="colorPrimaryTwo">#883F51B5</color>
     <color name="buttonBg">#6B6A69</color>
     <color name="transp_bg">#eba7a7a7</color>
+    <color name="defaulttxt">#000</color>
 </resources>

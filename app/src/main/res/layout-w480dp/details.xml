@@ -39,7 +39,7 @@
                     android:nextFocusLeft="@id/editText"
                     android:nextFocusUp="@id/editText"
                     android:selectAllOnFocus="true"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
 
                 <Button
                     android:id="@+id/deletebtn"
@@ -219,7 +219,8 @@
         android:background="@color/transp_bg"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:weightSum="1">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -240,6 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/fontcolour"
+                        android:textColor="@color/defaulttxt"
                         android:textSize="22sp" />
 
                     <TextView
@@ -261,7 +263,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/transparency" />
+                        android:text="@string/transparency"
+                        android:textColor="@color/defaulttxt" />
 
 
                     <SeekBar
@@ -280,7 +283,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/red" />
+                        android:text="@string/red"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekFontR"
@@ -298,7 +302,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/green" />
+                        android:text="@string/green"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekFontG"
@@ -316,7 +321,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/blue" />
+                        android:text="@string/blue"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekFontB"
@@ -336,6 +342,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/bgcolour"
+                        android:textColor="@color/defaulttxt"
                         android:textSize="22sp" />
 
                     <TextView
@@ -357,7 +364,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/transparency" />
+                        android:text="@string/transparency"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekBgA"
@@ -375,7 +383,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/red" />
+                        android:text="@string/red"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekBgR"
@@ -393,7 +402,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/green" />
+                        android:text="@string/green"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekBgG"
@@ -411,7 +421,8 @@
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/blue" />
+                        android:text="@string/blue"
+                        android:textColor="@color/defaulttxt" />
 
                     <SeekBar
                         android:id="@+id/seekBgB"
@@ -452,6 +463,7 @@
                     android:fontFamily="casual"
                     android:text="Casuel"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -462,6 +474,7 @@
                     android:fontFamily="cursive"
                     android:text="Cursive"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -472,6 +485,7 @@
                     android:fontFamily="monospace"
                     android:text="Monospace"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -482,6 +496,7 @@
                     android:fontFamily="sans-serif"
                     android:text="Sans-serif"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -492,6 +507,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:text="Sans-serif Condensed"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -502,6 +518,7 @@
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="Sans-serif Smallcaps"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -512,6 +529,7 @@
                     android:fontFamily="serif"
                     android:text="Serif"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
                 <TextView
@@ -522,6 +540,7 @@
                     android:fontFamily="serif-monospace"
                     android:text="Serif Monospace"
                     android:textAlignment="center"
+                    android:textColor="@color/defaulttxt"
                     android:textSize="40sp" />
 
 

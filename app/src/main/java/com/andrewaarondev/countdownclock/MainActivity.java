@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity implements
     private DetailsFragment details = null;
     public static int selectedItem = -1;
     public static final String SHARE_FILE_NAME = "countdown_shared";
-    private Intent shareIntent=new Intent(Intent.ACTION_SEND);
+    private Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         JodaTimeAndroid.init(this);
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         shareIntent.setType("image/png");
         Uri uri = Uri.fromFile(new File(getExternalCacheDir(), SHARE_FILE_NAME + ".png"));
-        shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         details = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details);
 
         if (details == null && findViewById(R.id.details) != null) {
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options, menu);
-        MenuItem item=menu.findItem(R.id.share);
+        MenuItem item = menu.findItem(R.id.share);
 
         ShareActionProvider share = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         if (share != null) share.setShareIntent(shareIntent);
