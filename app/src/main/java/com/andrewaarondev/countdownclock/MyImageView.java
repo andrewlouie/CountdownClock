@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
@@ -62,12 +61,12 @@ public class MyImageView extends ImageView {
             paint.setColor(Color.WHITE);
             float boxmargin = dpToPx(8);
             setTextSizeForWidth(paint, widthofbox - boxmargin * 2, getResources().getString(R.string.app_name));
-            paint.setTextSize(paint.getTextSize() -1F);
+            paint.setTextSize(paint.getTextSize() - 1F);
             float lineheight = heightofbox / 2 - boxmargin;
             canvas.drawText(getResources().getString(R.string.app_name), wleftx + boxmargin, wtopy + boxmargin + lineheight, paint);
             setTextSizeForWidth(paint, widthofbox - boxmargin * 2, getResources().getString(R.string.byme));
-            paint.setTextSize(paint.getTextSize() -1F);
-            canvas.drawText(getResources().getString(R.string.byme), wleftx + boxmargin, wtopy + lineheight *2 + boxmargin, paint);
+            paint.setTextSize(paint.getTextSize() - 1F);
+            canvas.drawText(getResources().getString(R.string.byme), wleftx + boxmargin, wtopy + lineheight * 2 + boxmargin, paint);
         }
         //return if event is pasted
         if (cd.isPast()) return;
@@ -171,7 +170,7 @@ public class MyImageView extends ImageView {
         //need a max size for lower resolution
         // if (smallestSize > 28) smallestSize = 28;
 
-        paint.setTextSize(smallestSize -1F);
+        paint.setTextSize(smallestSize - 1F);
         float spaceUnder = boxHeight * 0.15F + (paint.getTextSize() / 2);
         float startX = cd.getPositionX() + margin + fieldWidth / 2;
         float startY = cd.getPositionY() + margin + (paint.getTextSize() / 2);
@@ -240,14 +239,13 @@ public class MyImageView extends ImageView {
         int len = (text.length() <= 3 ? 3 : text.length());
         paint.getTextBounds(text, 0, len, bounds);
         float desiredTextSize = testTextSize * desiredWidth / bounds.width();
-        Log.w("YEA", "Cause" + desiredHeight + " " + bounds.height() + " " + testTextSize + " " + text);
         float or = testTextSize * desiredHeight / bounds.height();
         if (or < desiredTextSize) return or;
         return desiredTextSize;
     }
 
     private void getSmallestSize(Paint paint, float desiredWidth, float desiredHeight,
-                                     String text) {
+                                 String text) {
         final float testTextSize = 48f;
         paint.setTextSize(testTextSize);
         Rect bounds = new Rect();
@@ -257,6 +255,7 @@ public class MyImageView extends ImageView {
         if (or < desiredTextSize) desiredTextSize = or;
         if (desiredTextSize < smallestSize) smallestSize = desiredTextSize;
     }
+
     public float dpToPx(int pixels) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels, getResources().getDisplayMetrics());
     }
