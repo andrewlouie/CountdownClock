@@ -66,9 +66,9 @@ public class Helpers {
         int months = ri.getMonths();
         int weeks = ri.getWeeks();
         int days = ri.getDays();
-        int hours = ri.getHours();
-        int minutes = ri.getMinutes();
-        int seconds = ri.getSeconds();
+        int hours = (withoutTime ? 23 : ri.getHours());
+        int minutes = (withoutTime ? 59 : ri.getMinutes());
+        int seconds = (withoutTime ? 59 : ri.getSeconds());
 
         if ((!cd.isShowS() || withoutTime) && seconds > 0) minutes++;
         if ((!cd.isShowMI() || withoutTime) && minutes > 0) hours++;
