@@ -111,62 +111,7 @@ public class Helpers {
     }
 
     public static void moveFile(String inputPath, String inputFile, String outputPath, String newFileName, long id) {
-        new MoveFile(inputPath, inputFile, outputPath, newFileName, id).start();
-    }
-
-    private static class MoveFile extends Thread {
-        String inputPath;
-        String inputFile;
-        String outputPath;
-        String newFileName;
-        long id;
-
-        MoveFile(String inputPath, String inputFile, String outputPath, String newFileName, long id) {
-            this.inputPath = inputPath;
-            this.inputFile = inputFile;
-            this.outputPath = outputPath;
-            this.newFileName = newFileName;
-            this.id = id;
-        }
-
-        public void run() {
-            InputStream in;
-            OutputStream out;
-            try {
-
-                //create output directory if it doesn't exist
-                File dir = new File(outputPath);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-
-                in = new FileInputStream(inputPath + "/" + inputFile);
-                out = new FileOutputStream(outputPath + "/" + newFileName);
-
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-                in.close();
-                in = null;
-
-                // write the output file
-                out.flush();
-                out.close();
-                out = null;
-
-                // delete the original file
-                new File(inputPath + "/" + inputFile).delete();
-
-
-            } catch (Exception e) {
-                Log.e("tag", e.getMessage());
-            } finally {
-                EventBus.getDefault().postSticky(new FileCopiedEvent(id));
-            }
-        }
+        new CopyFile(inputPath, inputFile, outputPath, newFileName, id, true).start();
     }
 
     public static Uri validUri(String path, String filename) {
@@ -176,7 +121,7 @@ public class Helpers {
     }
 
     public static void copyFile(String inputPath, String inputFile, String outputPath, String newFileName, long id) {
-        new CopyFile(inputPath, inputFile, outputPath, newFileName, id).start();
+        new CopyFile(inputPath, inputFile, outputPath, newFileName, id, false).start();
     }
 
     private static class CopyFile extends Thread {
@@ -186,20 +131,23 @@ public class Helpers {
         String newFileName;
         InputStream inputStream;
         long id;
+        boolean delete;
 
-        CopyFile(String inputPath, String inputFile, String outputPath, String newFileName, long id) {
+        CopyFile(String inputPath, String inputFile, String outputPath, String newFileName, long id, boolean delete) {
             this.inputFile = inputFile;
             this.inputPath = inputPath;
             this.outputPath = outputPath;
             this.newFileName = newFileName;
             this.id = id;
+            this.delete = delete;
         }
 
-        CopyFile(InputStream inputStream, String outputPath, String newFileName, long id) {
+        CopyFile(InputStream inputStream, String outputPath, String newFileName, long id, boolean delete) {
             this.inputStream = inputStream;
             this.outputPath = outputPath;
             this.newFileName = newFileName;
             this.id = id;
+            this.delete = delete;
         }
 
         public void run() {
@@ -213,7 +161,6 @@ public class Helpers {
                 }
                 if (in == null) in = new FileInputStream(inputPath + "/" + inputFile);
                 out = new FileOutputStream(outputPath + "/" + newFileName);
-                //BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap bitmap = BitmapFactory.decodeStream(in);
                 int max = getMaxTextureSize();
                 //very high resolution images need to be resized:
@@ -253,12 +200,13 @@ public class Helpers {
                     Log.w("tag", "Something went wrong");
                 }
                 EventBus.getDefault().postSticky(new FileCopiedEvent(id));
+                if (delete) new File(inputPath + "/" + inputFile).delete();
             }
         }
     }
 
     public static void copyFile(InputStream inputStream, String outputPath, String newFileName, long id) {
-        new CopyFile(inputStream, outputPath, newFileName, id).start();
+        new CopyFile(inputStream, outputPath, newFileName, id, false).start();
     }
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {

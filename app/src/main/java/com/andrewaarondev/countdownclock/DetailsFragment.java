@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -707,15 +706,12 @@ public class DetailsFragment extends Fragment implements
                 Uri selectedImage = data.getData();
                 String url = data.getData().toString();
                 if (url.startsWith("content://com.google.android.apps.photos.content")) {
+                    OutputStream out = null;
                     try {
                         InputStream is = getActivity().getContentResolver().openInputStream(selectedImage);
-                        if (is != null) {
-                            Bitmap pictureBitmap = BitmapFactory.decodeStream(is);
-                            OutputStream out = new FileOutputStream(getActivity().getBaseContext().getFilesDir().toString() + "/" + cd.getFilename());
-                            pictureBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                        }
-                    } catch (FileNotFoundException e) {
-                        Log.w("tag", e.getMessage());
+                        Helpers.copyFile(is, getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename(), cd.getId());
+                    } catch (FileNotFoundException ex) {
+                        Log.w("tag", "File not found");
                     }
                 } else {
                     File temp = new File(Helpers.getRealPathFromURI(this.getActivity().getBaseContext(), selectedImage));
