@@ -201,7 +201,7 @@ public class Helpers {
                 } catch (IOException ex) {
                     Log.w("tag", "Something went wrong");
                 }
-                EventBus.getDefault().postSticky(new FileCopiedEvent(id));
+                EventBus.getDefault().post(new FileCopiedEvent(id));
                 if (delete) new File(inputPath + "/" + inputFile).delete();
             }
         }

@@ -45,7 +45,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Timer;
 
 import de.greenrobot.event.EventBus;
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -77,8 +76,6 @@ public class DetailsFragment extends Fragment implements
     MyImageView imgView;
     private boolean loading = false;
 
-    Timer timer;
-    boolean isRunning = false;
 
     File output;
     Handler handler;
@@ -258,7 +255,7 @@ public class DetailsFragment extends Fragment implements
             title.setText(cd.getTitle());
             title.clearFocus();
             imgView.setParams(cd);
-            Picasso.with(getActivity().getBaseContext()).load(Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename())).error(R.drawable.loading).noFade().into(imgView);
+            reloadImage();
             result.findViewById(R.id.btn_watermark).setSelected(cd.isWatermark());
             Button btn_import = (Button) result.findViewById(R.id.btn_import);
             Button btn_colours = (Button) result.findViewById(R.id.btn_colour);
@@ -278,8 +275,6 @@ public class DetailsFragment extends Fragment implements
             fs.setVisibility(View.GONE);
             updateSliders();
             selectFont();
-            //if (getActivity() != null)
-            //    save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
         }
         loading = false;
     }
@@ -327,11 +322,6 @@ public class DetailsFragment extends Fragment implements
         DatabaseHelper db = DatabaseHelper.getInstance(getActivity().getBaseContext());
         db.updateItem(cd);
         imgView.invalidate();
-        /*timer = new Timer();
-        if (!isRunning) {
-            timer.schedule(new SaveTask(), 3000);
-            isRunning = true;
-        }*/
     }
 
     @Override
@@ -417,15 +407,6 @@ public class DetailsFragment extends Fragment implements
         return false;
     }
 
-    /*
-        class SaveTask extends TimerTask {
-            public void run() {
-                if (getActivity() != null)
-                    save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
-                isRunning = false;
-            }
-        }
-    */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -726,7 +707,7 @@ public class DetailsFragment extends Fragment implements
     }
 
     public void onResume() {
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         super.onResume();
     }
 
@@ -780,10 +761,25 @@ public class DetailsFragment extends Fragment implements
     @SuppressWarnings("unused")
     public void onEventMainThread(FileCopiedEvent event) {
         if (cd == null || cd.getId() != event.getId()) return;
-        File file = new File(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename());
-        Picasso picasso = Picasso.with(getActivity().getBaseContext());
-        picasso.invalidate(file);
-        picasso.load(file).error(R.drawable.loading).into(imgView);
+        reloadImage();
+    }
+
+    public void reloadImage() {
+        if (getActivity() == null) return;
+        Picasso.Builder builder = new Picasso.Builder(getActivity());
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        reloadImage();
+                    }
+                }, 1000);
+            }
+        });
+        builder.build().load(Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename())).error(R.drawable.loading).into(imgView);
     }
 
     @Override
@@ -859,7 +855,6 @@ public class DetailsFragment extends Fragment implements
     public void save(File myDir, String filename, boolean overwrite) {
         new SaveFile(myDir, filename, overwrite).start();
     }
-
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
