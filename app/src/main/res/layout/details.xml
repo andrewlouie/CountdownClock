@@ -23,7 +23,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal">
-
+                <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="0px"
@@ -53,6 +53,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/calendardialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_calendar_icon" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -136,7 +145,6 @@
                 android:adjustViewBounds="true"
                 android:background="@drawable/border"
                 android:scaleType="fitCenter"
-
                 android:src="@raw/sunset" />
 
 
@@ -242,8 +250,7 @@
         android:background="@color/transp_bg"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:weightSum="1">
+        android:visibility="gone">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -264,7 +271,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/fontcolour"
-                        android:textColor="@color/defaulttxt"
+                        android:textColor="@android:color/black"
                         android:textSize="22sp" />
 
                     <TextView
@@ -287,7 +294,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/transparency"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
 
                     <SeekBar
@@ -307,7 +314,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/red"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekFontR"
@@ -326,7 +333,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/green"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekFontG"
@@ -345,7 +352,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/blue"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekFontB"
@@ -365,7 +372,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/bgcolour"
-                        android:textColor="@color/defaulttxt"
+                        android:textColor="@android:color/black"
                         android:textSize="22sp" />
 
                     <TextView
@@ -388,7 +395,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/transparency"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekBgA"
@@ -407,7 +414,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/red"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekBgR"
@@ -426,7 +433,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/green"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekBgG"
@@ -445,7 +452,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="@string/blue"
-                        android:textColor="@color/defaulttxt" />
+                        android:textColor="@android:color/black" />
 
                     <SeekBar
                         android:id="@+id/seekBgB"
@@ -486,7 +493,7 @@
                     android:fontFamily="casual"
                     android:text="Casuel"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -497,7 +504,7 @@
                     android:fontFamily="cursive"
                     android:text="Cursive"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -508,7 +515,7 @@
                     android:fontFamily="monospace"
                     android:text="Monospace"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -519,7 +526,7 @@
                     android:fontFamily="sans-serif"
                     android:text="Sans-serif"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -530,7 +537,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:text="Sans-serif Condensed"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -541,7 +548,7 @@
                     android:fontFamily="sans-serif-smallcaps"
                     android:text="Sans-serif Smallcaps"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -552,7 +559,7 @@
                     android:fontFamily="serif"
                     android:text="Serif"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
                 <TextView
@@ -563,7 +570,7 @@
                     android:fontFamily="serif-monospace"
                     android:text="Serif Monospace"
                     android:textAlignment="center"
-                    android:textColor="@color/defaulttxt"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp" />
 
 

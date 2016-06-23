@@ -18,6 +18,79 @@ public class Countdown implements Parcelable {
     private int bgColour;
     private int font;
     private boolean noSpecificTime;
+    private boolean showY;
+    private boolean showM;
+    private boolean showD;
+    private boolean showW;
+    private boolean showH;
+    private boolean showMI;
+    private boolean showS;
+
+    public void resetShowing() {
+        showY = false;
+        showM = false;
+        showW = false;
+        showD = false;
+        showH = false;
+        showMI = false;
+        showS = false;
+    }
+
+    public boolean isShowY() {
+        return showY;
+    }
+
+    public void setShowY(boolean showY) {
+        this.showY = showY;
+    }
+
+    public boolean isShowM() {
+        return showM;
+    }
+
+    public void setShowM(boolean showM) {
+        this.showM = showM;
+    }
+
+    public boolean isShowD() {
+        return showD;
+    }
+
+    public void setShowD(boolean showD) {
+        this.showD = showD;
+    }
+
+    public boolean isShowW() {
+        return showW;
+    }
+
+    public void setShowW(boolean showW) {
+        this.showW = showW;
+    }
+
+    public boolean isShowH() {
+        return showH;
+    }
+
+    public void setShowH(boolean showH) {
+        this.showH = showH;
+    }
+
+    public boolean isShowMI() {
+        return showMI;
+    }
+
+    public void setShowMI(boolean showMI) {
+        this.showMI = showMI;
+    }
+
+    public boolean isShowS() {
+        return showS;
+    }
+
+    public void setShowS(boolean showS) {
+        this.showS = showS;
+    }
 
     public boolean isPast() {
         Calendar dateFrom = Calendar.getInstance();
@@ -87,7 +160,7 @@ public class Countdown implements Parcelable {
         this.font = font;
     }
 
-    Countdown(int id, String title, long dateTime, int fontColour, int bgColour, boolean watermark, int font, int positionX, int positionY, boolean noSpecificTime) {
+    Countdown(int id, String title, long dateTime, int fontColour, int bgColour, boolean watermark, int font, int positionX, int positionY, boolean noSpecificTime, boolean showY, boolean showM, boolean showW, boolean showD, boolean showH, boolean showMI, boolean showS) {
         this.id = id;
         this.title = title;
         this.date = Calendar.getInstance();
@@ -99,6 +172,13 @@ public class Countdown implements Parcelable {
         this.positionY = positionY;
         this.font = font;
         this.noSpecificTime = noSpecificTime;
+        this.showD = showD;
+        this.showH = showH;
+        this.showY = showY;
+        this.showM = showM;
+        this.showW = showW;
+        this.showMI = showMI;
+        this.showS = showS;
     }
 
     public Calendar getDate() {
@@ -133,9 +213,17 @@ public class Countdown implements Parcelable {
         positionY = in.readInt();
         watermark = in.readByte() != 0x00;
         noSpecificTime = in.readByte() != 0x00;
+        showY = in.readByte() != 0x00;
+        showM = in.readByte() != 0x00;
+        showW = in.readByte() != 0x00;
+        showD = in.readByte() != 0x00;
+        showH = in.readByte() != 0x00;
+        showMI = in.readByte() != 0x00;
+        showS = in.readByte() != 0x00;
         fontColour = in.readInt();
         bgColour = in.readInt();
         font = in.readInt();
+
     }
 
     @Override
@@ -152,6 +240,13 @@ public class Countdown implements Parcelable {
         dest.writeInt(positionY);
         dest.writeByte((byte) (watermark ? 0x01 : 0x00));
         dest.writeByte((byte) (noSpecificTime ? 0x01 : 0x00));
+        dest.writeByte((byte) (showY ? 0x01 : 0x00));
+        dest.writeByte((byte) (showM ? 0x01 : 0x00));
+        dest.writeByte((byte) (showW ? 0x01 : 0x00));
+        dest.writeByte((byte) (showD ? 0x01 : 0x00));
+        dest.writeByte((byte) (showH ? 0x01 : 0x00));
+        dest.writeByte((byte) (showM ? 0x01 : 0x00));
+        dest.writeByte((byte) (showS ? 0x01 : 0x00));
         dest.writeInt(fontColour);
         dest.writeInt(bgColour);
         dest.writeInt(font);

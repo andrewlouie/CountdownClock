@@ -3,6 +3,7 @@ package com.andrewaarondev.countdownclock;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -41,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Timer;
@@ -56,6 +58,7 @@ public class DetailsFragment extends Fragment implements
         Button.OnClickListener,
         SeekBar.OnSeekBarChangeListener,
         SwitchCompat.OnCheckedChangeListener,
+        MyImageView.OnLongClickListener,
         View.OnTouchListener {
     private static final int FONTS = 0;
     private static final int COLOURS = 1;
@@ -95,6 +98,7 @@ public class DetailsFragment extends Fragment implements
         timePicker = (TimePicker) result.findViewById(R.id.tp_timepicker);
         imgView = (MyImageView) result.findViewById(R.id.imageView);
         imgView.setOnTouchListener(this);
+        imgView.setOnLongClickListener(this);
         handler = new Handler();
 
         final Runnable r = new Runnable() {
@@ -125,11 +129,12 @@ public class DetailsFragment extends Fragment implements
         result.findViewById(R.id.font5).setOnClickListener(this);
         result.findViewById(R.id.font6).setOnClickListener(this);
         result.findViewById(R.id.font7).setOnClickListener(this);
+        result.findViewById(R.id.calendardialog).setOnClickListener(this);
         result.findViewById(R.id.fontcolourbox).setOnClickListener(this);
         result.findViewById(R.id.bgcolourbox).setOnClickListener(this);
-        Button time_btn = (Button)result.findViewById(R.id.time_btn);
+        Button time_btn = (Button) result.findViewById(R.id.time_btn);
         if (time_btn != null) time_btn.setOnClickListener(this);
-        Button date_btn = (Button)result.findViewById(R.id.date_btn);
+        Button date_btn = (Button) result.findViewById(R.id.date_btn);
         if (date_btn != null) {
             date_btn.setOnClickListener(this);
             date_btn.setSelected(true);
@@ -143,7 +148,8 @@ public class DetailsFragment extends Fragment implements
         ((SeekBar) result.findViewById(R.id.seekBgR)).setOnSeekBarChangeListener(this);
         ((SeekBar) result.findViewById(R.id.seekBgG)).setOnSeekBarChangeListener(this);
         ((SeekBar) result.findViewById(R.id.seekBgB)).setOnSeekBarChangeListener(this);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) fontCompatibilityForOlderVersions();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+            fontCompatibilityForOlderVersions();
         loading = false;
         return result;
     }
@@ -246,8 +252,7 @@ public class DetailsFragment extends Fragment implements
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 timePicker.setHour(datetime.get(Calendar.HOUR_OF_DAY));
                 timePicker.setMinute(datetime.get(Calendar.MINUTE));
-            }
-            else {
+            } else {
                 timePicker.setCurrentHour(datetime.get(Calendar.HOUR_OF_DAY));
                 timePicker.setCurrentMinute(datetime.get(Calendar.MINUTE));
             }
@@ -328,6 +333,91 @@ public class DetailsFragment extends Fragment implements
             timer.schedule(new SaveTask(), 3000);
             isRunning = true;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        final CharSequence[] items = {
+                getResources().getString(R.string.years),
+                getResources().getString(R.string.months),
+                getResources().getString(R.string.weeks),
+                getResources().getString(R.string.days),
+                getResources().getString(R.string.hours),
+                getResources().getString(R.string.minutes),
+                getResources().getString(R.string.seconds)
+        };
+        final boolean[] items_selected = {
+                cd.isShowY(),
+                cd.isShowM(),
+                cd.isShowW(),
+                cd.isShowD(),
+                cd.isShowH(),
+                cd.isShowMI(),
+                cd.isShowS()
+        };
+
+        // arraylist to keep the selected items
+        final ArrayList<Integer> selectedItems = new ArrayList<>();
+        for (int i = 0; i < items_selected.length; i++) {
+            if (items_selected[i]) selectedItems.add(i);
+        }
+        AlertDialog dialog = new AlertDialog.Builder(this.getActivity())
+                .setTitle(getResources().getString(R.string.fieldstitle))
+                .setMultiChoiceItems(items, items_selected, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, add it to the selected items
+                            selectedItems.add(indexSelected);
+                        } else if (selectedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(Integer.valueOf(indexSelected));
+                        }
+                    }
+                }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (cd != null && !loading && getActivity() != null) {
+                            cd.resetShowing();
+                            for (int si : selectedItems) {
+                                switch (si) {
+                                    case 0:
+                                        cd.setShowY(true);
+                                        break;
+                                    case 1:
+                                        cd.setShowM(true);
+                                        break;
+                                    case 2:
+                                        cd.setShowW(true);
+                                        break;
+                                    case 3:
+                                        cd.setShowD(true);
+                                        break;
+                                    case 4:
+                                        cd.setShowH(true);
+                                        break;
+                                    case 5:
+                                        cd.setShowMI(true);
+                                        break;
+                                    case 6:
+                                        cd.setShowS(true);
+                                        break;
+                                }
+                                updateDb();
+                            }
+
+                        }
+                        //  Your code when user clicked on OK
+                        //  You can write the code  to save the selected item here
+                    }
+                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //interface only
+                    }
+                }).create();
+        dialog.show();
+        return false;
     }
 
     class SaveTask extends TimerTask {
@@ -501,6 +591,10 @@ public class DetailsFragment extends Fragment implements
                 Intent i3 = new Intent(this.getActivity(), PresetsActivity.class);
                 startActivityForResult(i3, RESULT_LOAD_PRESET);
                 break;
+            case R.id.calendardialog:
+                DateDialog ddialog = new DateDialog(cd.getDate(), datePicker);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ddialog.show(ft, "DatePicker");
         }
     }
 
@@ -574,8 +668,7 @@ public class DetailsFragment extends Fragment implements
             case PERMISSION_EXPORT:
                 if (canAccessReadExternal()) {
                     exportAllowed();
-                }
-                else {
+                } else {
                     new AlertDialog.Builder(getActivity())
                             .setTitle(getResources().getString(R.string.permissiontitle))
                             .setMessage(getResources().getString(R.string.permissionneeded))
@@ -760,6 +853,7 @@ public class DetailsFragment extends Fragment implements
             } else exportAllowed();
         } else exportAllowed();
     }
+
     public void exportAllowed() {
         save(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/Countdown"), "AA" + cd.getId(), false);
     }
@@ -777,7 +871,7 @@ public class DetailsFragment extends Fragment implements
                 event.getY() > cd.getPositionY() + imgView.boxHeight ||
                 cd.isPast()) {
             ((MyScrollView) result.findViewById(R.id.myScrollView)).setEnableScrolling(true);
-            return true;
+            return false;
         }
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             imgView.left = event.getX();
@@ -794,8 +888,8 @@ public class DetailsFragment extends Fragment implements
                 newposX = imgView.getWidth() - imgView.boxWidth;
             if (newposX < 0) newposX = 0;
             if (newposY < 0) newposY = 0;
-            cd.setPositionX((int)newposX);
-            cd.setPositionY((int)newposY);
+            cd.setPositionX((int) newposX);
+            cd.setPositionY((int) newposY);
             imgView.left = event.getX();
             imgView.top = event.getY();
         }
@@ -805,7 +899,7 @@ public class DetailsFragment extends Fragment implements
         }
         // draw
         imgView.invalidate();
-        return true;
+        return false;
     }
 
     private class SaveFile extends Thread {

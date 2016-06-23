@@ -44,5 +44,7 @@
     <string name="minute">Minute</string>
     <string name="second">Second</string>
     <string name="until">Until</string>
+    <string name="calendar">Calendar</string>
     <string name="byme">by Andrew Aaron</string>
+    <string name="fieldstitle">Select fields to show</string>
 </resources>

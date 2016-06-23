@@ -116,7 +116,7 @@ public class MyListFragment extends
                 if (countdowns != null) {
                     String[] newtimes = new String[countdowns.size()];
                     for (int i = 0; i < countdowns.size(); i++) {
-                        newtimes[i] = Helpers.getDateDifference(Calendar.getInstance(), countdowns.get(i).getDate(), countdowns.get(i).isNoSpecificTime(), getResources());
+                        newtimes[i] = Helpers.getDateDifference(Calendar.getInstance(), countdowns.get(i).getDate(), countdowns.get(i).isNoSpecificTime(), getResources(), countdowns.get(i));
                     }
                     publishProgress(newtimes);
                 }

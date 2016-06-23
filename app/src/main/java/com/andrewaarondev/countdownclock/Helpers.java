@@ -10,11 +10,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,7 +35,7 @@ public class Helpers {
     public static final int SERIF = 6;
     public static final int SERIF_MONOSPACE = 7;
 
-    public static String getDateDifference(Calendar dateFrom, Calendar dateTo, boolean withoutTime, Resources r) {
+    public static String getDateDifference(Calendar dateFrom, Calendar dateTo, boolean withoutTime, Resources r, Countdown cd) {
         String y = " " + r.getString(R.string.year) + " ";
         String m = " " + r.getString(R.string.month) + " ";
         String w = " " + r.getString(R.string.week) + " ";
@@ -55,37 +50,44 @@ public class Helpers {
         String hs = " " + r.getString(R.string.hours) + " ";
         String mis = " " + r.getString(R.string.minutes) + " ";
         String ss = " " + r.getString(R.string.seconds) + " ";
-        String diff = " ";
+
         dateTo.set(Calendar.SECOND, 0);
         dateTo.set(Calendar.MILLISECOND, 0);
-        if (dateFrom.getTimeInMillis() >= dateTo.getTimeInMillis()) return diff;
-        DateTime dateTimeFrom = new DateTime(dateFrom);
-        DateTime dateTimeTo = new DateTime(dateTo);
-        Period period = new Period(dateTimeFrom, dateTimeTo);
-        PeriodFormatter formatter;
         if (withoutTime) {
-            formatter = new PeriodFormatterBuilder()
-                    .appendYears().appendSuffix(y, ys)
-                    .appendMonths().appendSuffix(m, ms)
-                    .appendWeeks().appendSuffix(w, ws)
-                    .appendDays().appendSuffix(d, ds)
-                    .printZeroNever()
-                    .toFormatter();
-        } else {
-            formatter = new PeriodFormatterBuilder()
-                    .appendYears().appendSuffix(y, ys)
-                    .appendMonths().appendSuffix(m, ms)
-                    .appendWeeks().appendSuffix(w, ws)
-                    .appendDays().appendSuffix(d, ds)
-                    .appendHours().appendSuffix(h, hs)
-                    .appendMinutes().appendSuffix(mi, mis)
-                    .appendSeconds().appendSuffix(s, ss)
-                    .printZeroNever()
-                    .toFormatter();
+            dateTo.set(Calendar.MINUTE, 0);
+            dateTo.set(Calendar.HOUR, 0);
+        }
+        if (dateFrom.getTimeInMillis() >= dateTo.getTimeInMillis()) return " ";
+
+        RemainingInfo ri = new RemainingInfo(dateFrom, dateTo);
+        StringBuilder sb = new StringBuilder();
+
+        int years = ri.getYears();
+        int months = ri.getMonths();
+        int weeks = ri.getWeeks();
+        int days = ri.getDays();
+        int hours = ri.getHours();
+        int minutes = ri.getMinutes();
+        int seconds = ri.getSeconds();
+
+        if ((!cd.isShowS() || withoutTime) && seconds > 0) minutes++;
+        if ((!cd.isShowMI() || withoutTime) && minutes > 0) hours++;
+        if ((!cd.isShowH() || withoutTime) && hours > 0) days++;
+        if (!cd.isShowD() && days > 0) weeks++;
+        if (!cd.isShowW() && weeks > 0) months++;
+        if (!cd.isShowM() && months > 0) years++;
+
+        if (cd.isShowY() && years > 0) sb.append(years + (years == 1 ? y : ys));
+        if (cd.isShowM() && months > 0) sb.append(months + (months == 1 ? m : ms));
+        if (cd.isShowW() && weeks > 0) sb.append(weeks + (weeks == 1 ? w : ws));
+        if (cd.isShowD() && days > 0) sb.append(days + (days == 1 ? d : ds));
+        if (!withoutTime) {
+            if (cd.isShowH() && hours > 0) sb.append(hours + (hours == 1 ? h : hs));
+            if (cd.isShowM() && minutes > 0) sb.append(minutes + (minutes == 1 ? mi : mis));
+            if (cd.isShowS() && seconds > 0) sb.append(seconds + (seconds == 1 ? s : ss));
         }
 
-        diff = formatter.print(period);
-        return diff;
+        return sb.toString();
     }
 
     public static void deleteFile(String inputPath, String inputFile) {

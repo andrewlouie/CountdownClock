@@ -46,4 +46,5 @@
     <string name="month">Mois</string>
     <string name="week">Semaine</string>
     <string name="year">An</string>
+    <string name="fieldstitle">Sélectionner les champs pour afficher</string>
 </resources>

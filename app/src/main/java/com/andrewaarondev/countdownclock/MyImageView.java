@@ -1,6 +1,7 @@
 package com.andrewaarondev.countdownclock;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -68,41 +69,72 @@ public class MyImageView extends ImageView {
             canvas.drawText(getResources().getString(R.string.byme), wleftx + boxmargin, wtopy + lineheight *2 + boxmargin, paint);
         }
         //return if event is pasted
-        RemainingInfo ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
         if (cd.isPast()) return;
+
+        RemainingInfo ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
+        int years = ri.getYears();
+        int months = ri.getMonths();
+        int weeks = ri.getWeeks();
+        int days = ri.getDays();
+        int hours = (cd.isNoSpecificTime() ? 0 : ri.getHours());
+        int minutes = (cd.isNoSpecificTime() ? 0 : ri.getMinutes());
+        int seconds = (cd.isNoSpecificTime() ? 0 : ri.getSeconds());
+
+        if ((!cd.isShowS() || cd.isNoSpecificTime()) && seconds > 0) minutes++;
+        if ((!cd.isShowMI() || cd.isNoSpecificTime()) && minutes > 0) hours++;
+        if ((!cd.isShowH() || cd.isNoSpecificTime()) && hours > 0) days++;
+        if (!cd.isShowD() && days > 0) weeks++;
+        if (!cd.isShowW() && weeks > 0) months++;
+        if (!cd.isShowM() && months > 0) years++;
+
+        Resources r = getResources();
+        String y = " " + r.getString(R.string.year) + " ";
+        String m = " " + r.getString(R.string.month) + " ";
+        String w = " " + r.getString(R.string.week) + " ";
+        String d = " " + r.getString(R.string.day) + " ";
+        String h = " " + r.getString(R.string.hour) + " ";
+        String mi = " " + r.getString(R.string.minute) + " ";
+        String s = " " + r.getString(R.string.second) + " ";
+        String ys = " " + r.getString(R.string.years) + " ";
+        String ms = " " + r.getString(R.string.months) + " ";
+        String ws = " " + r.getString(R.string.weeks) + " ";
+        String ds = " " + r.getString(R.string.days) + " ";
+        String hs = " " + r.getString(R.string.hours) + " ";
+        String mis = " " + r.getString(R.string.minutes) + " ";
+        String ss = " " + r.getString(R.string.seconds) + " ";
 
         //calculate positions for numbers
         ArrayList<String> testString = new ArrayList<>();
         int countFields = 0;
-        if (ri.getYears() > 0) {
+        if (cd.isShowY() && years > 0) {
             countFields++;
-            testString.add((ri.getYears() == 1 ? getResources().getString(R.string.year) : getResources().getString(R.string.years)));
+            testString.add((years == 1 ? y : ys));
         }
-        if (ri.getMonths() > 0) {
+        if (cd.isShowM() && months > 0) {
             countFields++;
-            testString.add((ri.getMonths() == 1 ? getResources().getString(R.string.month) : getResources().getString(R.string.months)));
+            testString.add((months == 1 ? m : ms));
         }
-        if (ri.getWeeks() > 0) {
+        if (cd.isShowW() && weeks > 0) {
             countFields++;
-            testString.add((ri.getWeeks() == 1 ? getResources().getString(R.string.week) : getResources().getString(R.string.weeks)));
+            testString.add((weeks == 1 ? w : ws));
         }
-        if (ri.getDays() > 0) {
+        if (cd.isShowD() && days > 0) {
             countFields++;
-            testString.add((ri.getDays() == 1 ? getResources().getString(R.string.day) : getResources().getString(R.string.days)));
+            testString.add((days == 1 ? d : ds));
 
         }
         if (!cd.isNoSpecificTime()) {
-            if (ri.getHours() > 0) {
+            if (cd.isShowH() && hours > 0) {
                 countFields++;
-                testString.add((ri.getHours() == 1 ? getResources().getString(R.string.hour) : getResources().getString(R.string.hours)));
+                testString.add((hours == 1 ? h : hs));
             }
-            if (ri.getMinutes() > 0) {
+            if (cd.isShowMI() && minutes > 0) {
                 countFields++;
-                testString.add((ri.getMinutes() == 1 ? getResources().getString(R.string.minute) : getResources().getString(R.string.minutes)));
+                testString.add((minutes == 1 ? mi : mis));
             }
-            if (ri.getSeconds() > 0) {
+            if (cd.isShowS() && seconds > 0) {
                 countFields++;
-                testString.add((ri.getSeconds() == 1 ? getResources().getString(R.string.second) : getResources().getString(R.string.seconds)));
+                testString.add((seconds == 1 ? s : ss));
             }
         }
         if (countFields == 0) return;
@@ -131,8 +163,8 @@ public class MyImageView extends ImageView {
         float fieldWidth = (boxWidth - margin - margin) / countFields;
         smallestSize = 48f;
         //check each field for smallest text size
-        for (String s: testString) {
-            getSmallestSize(paint,fieldWidth," " + s);
+        for (String sec : testString) {
+            getSmallestSize(paint, fieldWidth, " " + sec);
         }
         //need a max size for lower resolutions
         // if (smallestSize > 28) smallestSize = 28;
@@ -141,42 +173,41 @@ public class MyImageView extends ImageView {
         float startX = cd.getPositionX() + margin + fieldWidth / 2;
         float startY = cd.getPositionY() + margin + (paint.getTextSize() / 2);
         paint.setTextAlign(Paint.Align.CENTER);
-
         //put the numbers and labels below
-        if (ri.getYears() > 0) {
-            canvas.drawText(ri.getYears() + "", startX, startY, paint);
-            canvas.drawText(getResources().getString(R.string.years), startX, startY + spaceUnder, paint);
+        if (cd.isShowY() && years > 0) {
+            canvas.drawText(years + "", startX, startY, paint);
+            canvas.drawText((years == 1 ? y : ys), startX, startY + spaceUnder, paint);
             startX += fieldWidth;
         }
-        if (ri.getMonths() > 0) {
-            canvas.drawText(ri.getMonths() + "", startX, startY, paint);
-            canvas.drawText(getResources().getString(R.string.months), startX, startY + spaceUnder, paint);
+        if (cd.isShowM() && months > 0) {
+            canvas.drawText(months + "", startX, startY, paint);
+            canvas.drawText((months == 1 ? m : ms), startX, startY + spaceUnder, paint);
             startX += fieldWidth;
         }
-        if (ri.getWeeks() > 0) {
-            canvas.drawText(ri.getWeeks() + "", startX, startY, paint);
-            canvas.drawText(getResources().getString(R.string.weeks), startX, startY + spaceUnder, paint);
+        if (cd.isShowW() && weeks > 0) {
+            canvas.drawText(weeks + "", startX, startY, paint);
+            canvas.drawText((weeks == 1 ? w : ws), startX, startY + spaceUnder, paint);
             startX += fieldWidth;
         }
-        if (ri.getDays() > 0) {
-            canvas.drawText(ri.getDays() + "", startX, startY, paint);
-            canvas.drawText(getResources().getString(R.string.days), startX, startY + spaceUnder, paint);
+        if (cd.isShowD() && days > 0) {
+            canvas.drawText(days + "", startX, startY, paint);
+            canvas.drawText((days == 1 ? d : ds), startX, startY + spaceUnder, paint);
             startX += fieldWidth;
         }
         if (!cd.isNoSpecificTime()) {
-            if (ri.getHours() > 0) {
-                canvas.drawText(ri.getHours() + "", startX, startY, paint);
-                canvas.drawText(getResources().getString(R.string.hours), startX, startY + spaceUnder, paint);
+            if (cd.isShowH() && hours > 0) {
+                canvas.drawText(hours + "", startX, startY, paint);
+                canvas.drawText((hours == 1 ? h : hs), startX, startY + spaceUnder, paint);
                 startX += fieldWidth;
             }
-            if (ri.getMinutes() > 0) {
-                canvas.drawText(ri.getMinutes() + "", startX, startY, paint);
-                canvas.drawText(getResources().getString(R.string.minutes), startX, startY + spaceUnder, paint);
+            if (cd.isShowMI() && minutes > 0) {
+                canvas.drawText(minutes + "", startX, startY, paint);
+                canvas.drawText((minutes == 1 ? mi : mis), startX, startY + spaceUnder, paint);
                 startX += fieldWidth;
             }
-            if (ri.getSeconds() > 0) {
-                canvas.drawText(ri.getSeconds() + "", startX, startY, paint);
-                canvas.drawText(getResources().getString(R.string.seconds), startX, startY + spaceUnder, paint);
+            if (cd.isShowS() && seconds > 0) {
+                canvas.drawText(seconds + "", startX, startY, paint);
+                canvas.drawText((seconds == 1 ? s : ss), startX, startY + spaceUnder, paint);
             }
         }
         float xPos = (boxWidth / 2) + cd.getPositionX();
