@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
@@ -76,9 +77,9 @@ public class MyImageView extends ImageView {
         int months = ri.getMonths();
         int weeks = ri.getWeeks();
         int days = ri.getDays();
-        int hours = (cd.isNoSpecificTime() ? 0 : ri.getHours());
-        int minutes = (cd.isNoSpecificTime() ? 0 : ri.getMinutes());
-        int seconds = (cd.isNoSpecificTime() ? 0 : ri.getSeconds());
+        int hours = (cd.isNoSpecificTime() ? 23 : ri.getHours());
+        int minutes = (cd.isNoSpecificTime() ? 59 : ri.getMinutes());
+        int seconds = (cd.isNoSpecificTime() ? 59 : ri.getSeconds());
 
         if ((!cd.isShowS() || cd.isNoSpecificTime()) && seconds > 0) minutes++;
         if ((!cd.isShowMI() || cd.isNoSpecificTime()) && minutes > 0) hours++;
@@ -143,6 +144,7 @@ public class MyImageView extends ImageView {
         //draw the background rectangle
         boxWidth = canvas.getWidth() * 0.8F;
         boxHeight = canvas.getHeight() * 0.4F;
+        if (boxHeight > dpToPx(200)) boxHeight = dpToPx(200);
 
         paint.setColor(cd.getBgColour());
         paint.setStyle(Paint.Style.FILL);
@@ -164,10 +166,11 @@ public class MyImageView extends ImageView {
         smallestSize = 48f;
         //check each field for smallest text size
         for (String sec : testString) {
-            getSmallestSize(paint, fieldWidth, " " + sec);
+            getSmallestSize(paint, fieldWidth, boxHeight * 0.3F, " " + sec);
         }
-        //need a max size for lower resolutions
+        //need a max size for lower resolution
         // if (smallestSize > 28) smallestSize = 28;
+
         paint.setTextSize(smallestSize -1F);
         float spaceUnder = boxHeight * 0.15F + (paint.getTextSize() / 2);
         float startX = cd.getPositionX() + margin + fieldWidth / 2;
@@ -213,7 +216,8 @@ public class MyImageView extends ImageView {
         float xPos = (boxWidth / 2) + cd.getPositionX();
         float yPos = cd.getPositionY() + boxHeight - margin;
         // put the 'until event' text
-        setTextSizeForWidth(paint,boxWidth * 0.7F,getResources().getString(R.string.until) + " " + cd.getTitle());
+        float maxwid = setTextSizeForWidthAndHeight(paint, boxWidth * 0.7F, boxHeight * 0.3F, getResources().getString(R.string.until) + " " + cd.getTitle());
+        paint.setTextSize(maxwid);
         canvas.drawText(getResources().getString(R.string.until) + " " + cd.getTitle(), xPos, yPos, paint);
     }
 
@@ -227,15 +231,31 @@ public class MyImageView extends ImageView {
         float desiredTextSize = testTextSize * desiredWidth / bounds.width();
         paint.setTextSize(desiredTextSize);
     }
-    private void getSmallestSize(Paint paint, float desiredWidth,
+
+    private float setTextSizeForWidthAndHeight(Paint paint, float desiredWidth, float desiredHeight,
+                                               String text) {
+        final float testTextSize = 48f;
+        paint.setTextSize(testTextSize);
+        Rect bounds = new Rect();
+        int len = (text.length() <= 3 ? 3 : text.length());
+        paint.getTextBounds(text, 0, len, bounds);
+        float desiredTextSize = testTextSize * desiredWidth / bounds.width();
+        Log.w("YEA", "Cause" + desiredHeight + " " + bounds.height() + " " + testTextSize + " " + text);
+        float or = testTextSize * desiredHeight / bounds.height();
+        if (or < desiredTextSize) return or;
+        return desiredTextSize;
+    }
+
+    private void getSmallestSize(Paint paint, float desiredWidth, float desiredHeight,
                                      String text) {
         final float testTextSize = 48f;
         paint.setTextSize(testTextSize);
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
         float desiredTextSize = testTextSize * desiredWidth / bounds.width();
+        float or = testTextSize * desiredHeight / bounds.height();
+        if (or < desiredTextSize) desiredTextSize = or;
         if (desiredTextSize < smallestSize) smallestSize = desiredTextSize;
-        paint.setTextSize(desiredTextSize);
     }
     public float dpToPx(int pixels) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels, getResources().getDisplayMetrics());

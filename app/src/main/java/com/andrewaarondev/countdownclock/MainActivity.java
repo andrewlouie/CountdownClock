@@ -97,7 +97,16 @@ public class MainActivity extends AppCompatActivity implements
         MenuItem item = menu.findItem(R.id.share);
 
         ShareActionProvider share = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        if (share != null) share.setShareIntent(shareIntent);
+        if (share != null) {
+            share.setShareIntent(shareIntent);
+            share.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+                @Override
+                public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                    if (details != null) details.saveToShare();
+                    return true;
+                }
+            });
+        }
         return (super.onCreateOptionsMenu(menu));
     }
 

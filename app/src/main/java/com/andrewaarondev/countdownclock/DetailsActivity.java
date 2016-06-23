@@ -44,6 +44,13 @@ public class DetailsActivity extends AppCompatActivity {
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         share.setShareIntent(shareIntent);
+        share.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+            @Override
+            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                if (details != null) details.saveToShare();
+                return true;
+            }
+        });
         return (super.onCreateOptionsMenu(menu));
     }
 

@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -279,8 +278,8 @@ public class DetailsFragment extends Fragment implements
             fs.setVisibility(View.GONE);
             updateSliders();
             selectFont();
-            if (getActivity() != null)
-                save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
+            //if (getActivity() != null)
+            //    save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
         }
         loading = false;
     }
@@ -328,11 +327,11 @@ public class DetailsFragment extends Fragment implements
         DatabaseHelper db = DatabaseHelper.getInstance(getActivity().getBaseContext());
         db.updateItem(cd);
         imgView.invalidate();
-        timer = new Timer();
+        /*timer = new Timer();
         if (!isRunning) {
             timer.schedule(new SaveTask(), 3000);
             isRunning = true;
-        }
+        }*/
     }
 
     @Override
@@ -407,8 +406,6 @@ public class DetailsFragment extends Fragment implements
                             }
 
                         }
-                        //  Your code when user clicked on OK
-                        //  You can write the code  to save the selected item here
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -420,14 +417,15 @@ public class DetailsFragment extends Fragment implements
         return false;
     }
 
-    class SaveTask extends TimerTask {
-        public void run() {
-            if (getActivity() != null)
-                save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
-            isRunning = false;
+    /*
+        class SaveTask extends TimerTask {
+            public void run() {
+                if (getActivity() != null)
+                    save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
+                isRunning = false;
+            }
         }
-    }
-
+    */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -899,7 +897,7 @@ public class DetailsFragment extends Fragment implements
         }
         // draw
         imgView.invalidate();
-        return false;
+        return true;
     }
 
     private class SaveFile extends Thread {
@@ -941,5 +939,10 @@ public class DetailsFragment extends Fragment implements
             if (!overwrite)
                 EventBus.getDefault().post(new FileSavedEvent(myDir.toString() + "/" + fname));
         }
+    }
+
+    public void saveToShare() {
+        if (getActivity() != null)
+            save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
     }
 }
