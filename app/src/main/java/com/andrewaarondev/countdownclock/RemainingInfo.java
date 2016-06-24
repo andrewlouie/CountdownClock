@@ -2,6 +2,7 @@ package com.andrewaarondev.countdownclock;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
@@ -17,6 +18,14 @@ public class RemainingInfo {
         DateTime dateTimeFrom = new DateTime(dateFrom);
         DateTime dateTimeTo = new DateTime(dateTo);
         this.period = new Period(dateTimeFrom,dateTimeTo);
+    }
+
+    RemainingInfo(Calendar dateFrom, Calendar dateTo, boolean noMonth) {
+        dateTo.set(Calendar.SECOND, 0);
+        dateTo.set(Calendar.MILLISECOND, 0);
+        DateTime dateTimeFrom = new DateTime(dateFrom);
+        DateTime dateTimeTo = new DateTime(dateTo);
+        this.period = new Period(dateTimeFrom, dateTimeTo, PeriodType.yearWeekDayTime());
     }
     public int getYears() {
         PeriodFormatter formatter = new PeriodFormatterBuilder().appendYears().toFormatter();

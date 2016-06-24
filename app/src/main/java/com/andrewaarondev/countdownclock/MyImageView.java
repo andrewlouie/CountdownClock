@@ -71,7 +71,11 @@ public class MyImageView extends ImageView {
         //return if event is pasted
         if (cd.isPast()) return;
 
-        RemainingInfo ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
+        RemainingInfo ri;
+        if (cd.isShowM()) ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
+        else ri = new RemainingInfo(Calendar.getInstance(), cd.getDate(), true);
+
+
         int years = ri.getYears();
         int months = ri.getMonths();
         int weeks = ri.getWeeks();
@@ -79,6 +83,25 @@ public class MyImageView extends ImageView {
         int hours = (cd.isNoSpecificTime() ? 23 : ri.getHours());
         int minutes = (cd.isNoSpecificTime() ? 59 : ri.getMinutes());
         int seconds = (cd.isNoSpecificTime() ? 59 : ri.getSeconds());
+
+        if (years > 0 && !cd.isShowY()) {
+            if (cd.isShowM()) months = months + years * 12;
+            else weeks = weeks + years * 52;
+            years = 0;
+        }
+
+        if (weeks > 0 && !cd.isShowW()) {
+            days = days + weeks * 7;
+            weeks = 0;
+        }
+        if (days > 0 && !cd.isShowD()) {
+            hours = hours + days * 24;
+            days = 0;
+        }
+        if (minutes > 0 && !cd.isShowMI()) {
+            seconds = seconds + minutes * 60;
+            minutes = 0;
+        }
 
         if ((!cd.isShowS() || cd.isNoSpecificTime()) && seconds > 0) minutes++;
         if ((!cd.isShowMI() || cd.isNoSpecificTime()) && minutes > 0) hours++;
