@@ -98,6 +98,10 @@ public class MyImageView extends ImageView {
             hours = hours + days * 24;
             days = 0;
         }
+        if (hours > 0 && !cd.isShowH()) {
+            minutes = minutes + hours * 60;
+            hours = 0;
+        }
         if (minutes > 0 && !cd.isShowMI()) {
             seconds = seconds + minutes * 60;
             minutes = 0;
