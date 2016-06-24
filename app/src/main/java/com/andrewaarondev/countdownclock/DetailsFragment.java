@@ -393,9 +393,8 @@ public class DetailsFragment extends Fragment implements
                                         cd.setShowS(true);
                                         break;
                                 }
-                                updateDb();
                             }
-
+                            updateDb();
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
