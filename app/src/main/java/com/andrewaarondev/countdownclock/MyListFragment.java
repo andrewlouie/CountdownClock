@@ -1,20 +1,15 @@
 package com.andrewaarondev.countdownclock;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,26 +61,6 @@ public class MyListFragment extends
             onListItemClick(getListView(), getView(), MainActivity.selectedItem, 0);
         else if (MainActivity.selectedItem != -1) {
             onListItemClick(getListView(), getView(), MainActivity.selectedItem, 0);
-        }
-        Log.w("here", "no?");
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                reloadImages();
-            }
-        }, 1000);
-    }
-
-    public void reloadImages() {
-        for (int i = 0; i < countdowns.size(); i++) {
-            if (getListView().getChildAt(i) != null) {
-                ImageView here = (ImageView) getListView().getChildAt(i).findViewById(R.id.thumb);
-                Uri file = Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), countdowns.get(i).getFilename());
-                Picasso picasso = Picasso.with(getActivity().getBaseContext());
-                picasso.invalidate(file);
-                picasso.load(file).error(R.raw.sunset).noFade().centerCrop().resize(150, 150).into(here);
-            }
         }
     }
 

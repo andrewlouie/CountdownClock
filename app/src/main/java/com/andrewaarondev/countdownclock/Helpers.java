@@ -127,6 +127,7 @@ public class Helpers {
     }
 
     private static class CopyFile extends Thread {
+        static String TEMP_FILE_NAME = "TEMPFILE.png";
         String inputPath;
         String inputFile;
         String outputPath;
@@ -162,7 +163,7 @@ public class Helpers {
                     dir.mkdirs();
                 }
                 if (in == null) in = new FileInputStream(inputPath + "/" + inputFile);
-                out = new FileOutputStream(outputPath + "/" + newFileName);
+                out = new FileOutputStream(outputPath + "/" + TEMP_FILE_NAME);
                 Bitmap bitmap = BitmapFactory.decodeStream(in);
                 int max = getMaxTextureSize();
                 //very high resolution images need to be resized:
@@ -201,6 +202,10 @@ public class Helpers {
                 } catch (IOException ex) {
                     Log.w("tag", "Something went wrong");
                 }
+                File tempfile = new File(outputPath + "/" + TEMP_FILE_NAME);
+                File newfile = new File(outputPath + "/" + newFileName);
+                if (newfile.exists()) newfile.delete();
+                tempfile.renameTo(newfile);
                 EventBus.getDefault().post(new FileCopiedEvent(id));
                 if (delete) new File(inputPath + "/" + inputFile).delete();
             }

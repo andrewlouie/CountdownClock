@@ -240,6 +240,7 @@ public class DetailsFragment extends Fragment implements
     }
 
     public void loadCountdown(Countdown cd) {
+        if (this.cd != null) return;
         loading = true;
         if (datePicker != null) {
             this.cd = cd;
@@ -267,8 +268,8 @@ public class DetailsFragment extends Fragment implements
             btn_colours.setSelected(false);
             btn_import.setSelected(false);
             cs.setAlpha(0);
-            is.setAlpha(0);
             cs.setVisibility(View.GONE);
+            is.setAlpha(0);
             is.setVisibility(View.GONE);
             btn_fonts.setSelected(false);
             fs.setAlpha(0);
@@ -409,6 +410,7 @@ public class DetailsFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
+        LinearLayout is = (LinearLayout) result.findViewById(R.id.importselector);
         switch (v.getId()) {
             case R.id.date_btn:
                 result.findViewById(R.id.dp_datepicker).setVisibility(View.VISIBLE);
@@ -425,7 +427,7 @@ public class DetailsFragment extends Fragment implements
             case R.id.btn_watermark:
                 if (cd != null && !loading && getActivity() != null) {
                     cd.setWatermark(!cd.isWatermark());
-                    ((Button) v).setSelected(cd.isWatermark());
+                    v.setSelected(cd.isWatermark());
                     updateDb();
                 }
                 break;
@@ -546,6 +548,9 @@ public class DetailsFragment extends Fragment implements
                 fontcdialog.show();
                 break;
             case R.id.btn_camera:
+                result.findViewById(R.id.btn_import).setSelected(false);
+                is.setAlpha(0);
+                is.setVisibility(View.GONE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (!canAccessReadExternal() || !canAccessWriteExternal()) {
                         String[] permissions = {
@@ -557,6 +562,9 @@ public class DetailsFragment extends Fragment implements
                 } else launchCamera();
                 break;
             case R.id.btn_gallery:
+                result.findViewById(R.id.btn_import).setSelected(false);
+                is.setAlpha(0);
+                is.setVisibility(View.GONE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (!canAccessReadExternal()) {
                         String[] permissions = {
@@ -567,6 +575,9 @@ public class DetailsFragment extends Fragment implements
                 } else launchGallery();
                 break;
             case R.id.btn_presets:
+                result.findViewById(R.id.btn_import).setSelected(false);
+                is.setAlpha(0);
+                is.setVisibility(View.GONE);
                 Intent i3 = new Intent(this.getActivity(), PresetsActivity.class);
                 startActivityForResult(i3, RESULT_LOAD_PRESET);
                 break;
@@ -766,26 +777,25 @@ public class DetailsFragment extends Fragment implements
 
     public void reloadImage() {
         if (getActivity() == null) return;
-        Picasso.Builder builder = new Picasso.Builder(getActivity());
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadImage();
-                    }
-                }, 1000);
-            }
-        });
-        builder.build().load(Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename())).error(R.drawable.loading).into(imgView);
+        Uri file = Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename());
+        Picasso picasso = Picasso.with(getActivity().getBaseContext());
+        picasso.invalidate(file);
+        picasso.load(file).noFade().into(imgView);
+    }
+
+    public void loadingImg() {
+        Log.w("putting", "loading img");
+        Uri file = Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename());
+        Picasso picasso = Picasso.with(getActivity().getBaseContext());
+        picasso.invalidate(file);
+        picasso.load(R.drawable.loading).noFade().into(imgView);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CONTENT_REQUEST) {
             if (resultCode == MainActivity.RESULT_OK) {
+                loadingImg();
                 Helpers.moveFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), TEMP_FILE, getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename(), cd.getId());
             }
         } else if (requestCode == RESULT_LOAD_IMAGE) {
@@ -796,12 +806,14 @@ public class DetailsFragment extends Fragment implements
                     OutputStream out = null;
                     try {
                         InputStream is = getActivity().getContentResolver().openInputStream(selectedImage);
+                        loadingImg();
                         Helpers.copyFile(is, getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename(), cd.getId());
                     } catch (FileNotFoundException ex) {
                         Log.w("tag", "File not found");
                     }
                 } else {
                     File temp = new File(Helpers.getRealPathFromURI(this.getActivity().getBaseContext(), selectedImage));
+                    loadingImg();
                     Helpers.copyFile(temp.getParent(), temp.getName(), getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename(), cd.getId());
                 }
             }
@@ -809,6 +821,7 @@ public class DetailsFragment extends Fragment implements
             if (resultCode == MainActivity.RESULT_OK) {
                 int returnedresult = data.getIntExtra("position", 0);
                 InputStream inputStream = getResources().openRawResource(returnedresult);
+                loadingImg();
                 Helpers.copyFile(inputStream, getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename(), cd.getId());
             }
         }
@@ -941,3 +954,5 @@ public class DetailsFragment extends Fragment implements
             save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
     }
 }
+
+
