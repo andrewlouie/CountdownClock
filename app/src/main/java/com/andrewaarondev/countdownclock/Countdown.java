@@ -245,7 +245,7 @@ public class Countdown implements Parcelable {
         dest.writeByte((byte) (showW ? 0x01 : 0x00));
         dest.writeByte((byte) (showD ? 0x01 : 0x00));
         dest.writeByte((byte) (showH ? 0x01 : 0x00));
-        dest.writeByte((byte) (showM ? 0x01 : 0x00));
+        dest.writeByte((byte) (showMI ? 0x01 : 0x00));
         dest.writeByte((byte) (showS ? 0x01 : 0x00));
         dest.writeInt(fontColour);
         dest.writeInt(bgColour);

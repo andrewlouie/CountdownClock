@@ -108,7 +108,7 @@ public class Helpers {
         if (cd.isShowD() && days > 0) sb.append(days + (days == 1 ? d : ds));
         if (!withoutTime) {
             if (cd.isShowH() && hours > 0) sb.append(hours + (hours == 1 ? h : hs));
-            if (cd.isShowM() && minutes > 0) sb.append(minutes + (minutes == 1 ? mi : mis));
+            if (cd.isShowMI() && minutes > 0) sb.append(minutes + (minutes == 1 ? mi : mis));
             if (cd.isShowS() && seconds > 0) sb.append(seconds + (seconds == 1 ? s : ss));
         }
 
