@@ -240,7 +240,7 @@ public class DetailsFragment extends Fragment implements
     }
 
     public void loadCountdown(Countdown cd) {
-        if (this.cd != null) return;
+        if (this.cd != null && !getResources().getBoolean(R.bool.widescreen)) return;
         loading = true;
         if (datePicker != null) {
             this.cd = cd;
