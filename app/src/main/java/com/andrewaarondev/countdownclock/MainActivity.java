@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements
     public static int selectedItem = -1;
     public static final String SHARE_FILE_NAME = "countdown_shared";
     private Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    private boolean resuming;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onItemSelected(final Countdown c, int position) {
         selectedItem = position;
         if (details != null && getResources().getBoolean(R.bool.widescreen)) {
-            details.loadCountdown(c);
+            if (!resuming) details.loadCountdown(c);
         } else {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }, 500);
         }
+        resuming = false;
     }
 
     @Override
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onResume() {
+        resuming = true;
         if (!getResources().getBoolean(R.bool.widescreen)) {
             DatabaseHelper db = DatabaseHelper.getInstance(getBaseContext());
             db.getCountdowns();

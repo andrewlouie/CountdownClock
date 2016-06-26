@@ -2,7 +2,6 @@ package com.andrewaarondev.countdownclock;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ public class MyListFragment extends
 
     private static ArrayList<Countdown> countdowns = null;
     private AddStringTask task = null;
-    Handler handler;
 
     @Override
     public void onActivityCreated(Bundle state) {
@@ -98,7 +96,7 @@ public class MyListFragment extends
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.row, parent, false);
-                wrapper = new MyViewHolder(convertView,getActivity().getBaseContext().getFilesDir().toString(),getActivity().getBaseContext());
+                wrapper = new MyViewHolder(convertView, getActivity().getBaseContext().getFilesDir().toString(), getActivity().getBaseContext());
                 convertView.setTag(wrapper);
             } else {
                 wrapper = (MyViewHolder) convertView.getTag();
@@ -128,11 +126,12 @@ public class MyListFragment extends
 
         @Override
         protected void onProgressUpdate(String... item) {
-            if (!isCancelled()) {
-                for (int i = 0; i < item.length; i++) {
+            if (!isCancelled()) {//actually check up here
+                for (int i = getListView().getFirstVisiblePosition(); i <= getListView().getLastVisiblePosition(); i++) {
+                    int firstPosition = i + getListView().getFirstVisiblePosition() - getListView().getHeaderViewsCount(); // This is the same as child #0
                     if (getListView().getChildAt(i) != null) {
                         TextView here = (TextView) getListView().getChildAt(i).findViewById(R.id.timeleft);
-                        here.setText(item[i]);
+                        here.setText(item[firstPosition]);
                     }
                 }
             }

@@ -783,7 +783,6 @@ public class DetailsFragment extends Fragment implements
     }
 
     public void loadingImg() {
-        Log.w("putting", "loading img");
         Uri file = Helpers.validUri(getActivity().getBaseContext().getFilesDir().toString(), cd.getFilename());
         Picasso picasso = Picasso.with(getActivity().getBaseContext());
         picasso.invalidate(file);
