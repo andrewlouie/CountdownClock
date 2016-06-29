@@ -20,6 +20,7 @@ public class MyListFragment extends
 
     private static ArrayList<Countdown> countdowns = null;
     private AddStringTask task = null;
+    private boolean fromListLoaded;
 
     @Override
     public void onActivityCreated(Bundle state) {
@@ -55,11 +56,13 @@ public class MyListFragment extends
     public void onEventMainThread(ListLoadedEvent event) {
         countdowns = event.getCountdowns();
         setListAdapter(new CustomAdapter());
-        if (getResources().getBoolean(R.bool.widescreen))
+        if (getResources().getBoolean(R.bool.widescreen)) {
+            fromListLoaded = true;
             onListItemClick(getListView(), getView(), MainActivity.selectedItem, 0);
-        else if (MainActivity.selectedItem != -1) {
+        } else if (MainActivity.selectedItem != -1) {
             onListItemClick(getListView(), getView(), MainActivity.selectedItem, 0);
         }
+        fromListLoaded = false;
     }
 
     @Override
@@ -70,7 +73,8 @@ public class MyListFragment extends
         } else {
             getListView().setChoiceMode(ListView.CHOICE_MODE_NONE);
         }
-        getContract().onItemSelected(countdowns.get(position), position);
+        getContract().onItemSelected(countdowns.get(position), position, fromListLoaded);
+
     }
 
 
@@ -144,7 +148,7 @@ public class MyListFragment extends
     }
 
     interface Contract {
-        void onItemSelected(Countdown c, int position);
+        void onItemSelected(Countdown c, int position, boolean fromListLoaded);
 
         boolean isPersistentSelection();
     }

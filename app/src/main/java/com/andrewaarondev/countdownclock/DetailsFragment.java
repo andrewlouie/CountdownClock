@@ -952,5 +952,3 @@ public class DetailsFragment extends Fragment implements
             save(getActivity().getExternalCacheDir(), MainActivity.SHARE_FILE_NAME, true);
     }
 }
-
-

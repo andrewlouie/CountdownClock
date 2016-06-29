@@ -13,7 +13,7 @@ public class RemainingInfo {
     private Period period;
 
     RemainingInfo(Calendar dateFrom,Calendar dateTo) {
-        dateTo.set(Calendar.SECOND, 0);
+        //dateTo.set(Calendar.SECOND, 0);
         dateTo.set(Calendar.MILLISECOND, 0);
         DateTime dateTimeFrom = new DateTime(dateFrom);
         DateTime dateTimeTo = new DateTime(dateTo);
@@ -21,7 +21,7 @@ public class RemainingInfo {
     }
 
     RemainingInfo(Calendar dateFrom, Calendar dateTo, boolean noMonth) {
-        dateTo.set(Calendar.SECOND, 0);
+        //dateTo.set(Calendar.SECOND, 0);
         dateTo.set(Calendar.MILLISECOND, 0);
         DateTime dateTimeFrom = new DateTime(dateFrom);
         DateTime dateTimeTo = new DateTime(dateTo);

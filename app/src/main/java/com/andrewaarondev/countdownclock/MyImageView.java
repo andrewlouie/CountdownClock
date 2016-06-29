@@ -72,6 +72,11 @@ public class MyImageView extends ImageView {
         if (cd.isPast()) return;
 
         RemainingInfo ri;
+        if (cd.isNoSpecificTime()) {
+            cd.getDate().set(Calendar.SECOND, 1);
+            cd.getDate().set(Calendar.MINUTE, 0);
+            cd.getDate().set(Calendar.HOUR_OF_DAY, 0);
+        }
         if (cd.isShowM()) ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
         else ri = new RemainingInfo(Calendar.getInstance(), cd.getDate(), true);
 
@@ -80,9 +85,9 @@ public class MyImageView extends ImageView {
         int months = ri.getMonths();
         int weeks = ri.getWeeks();
         int days = ri.getDays();
-        int hours = (cd.isNoSpecificTime() ? 23 : ri.getHours());
-        int minutes = (cd.isNoSpecificTime() ? 59 : ri.getMinutes());
-        int seconds = (cd.isNoSpecificTime() ? 59 : ri.getSeconds());
+        int hours = (cd.isNoSpecificTime() ? 0 : ri.getHours());
+        int minutes = (cd.isNoSpecificTime() ? 0 : ri.getMinutes());
+        int seconds = (cd.isNoSpecificTime() ? 1 : ri.getSeconds());
 
         if (years > 0 && !cd.isShowY()) {
             if (cd.isShowM()) months = months + years * 12;
@@ -108,7 +113,7 @@ public class MyImageView extends ImageView {
         }
 
         if ((!cd.isShowS() || cd.isNoSpecificTime()) && seconds > 0) minutes++;
-        if ((!cd.isShowMI() || cd.isNoSpecificTime()) && minutes > 0) hours++;
+        if ((!(cd.isShowMI()) || cd.isNoSpecificTime()) && minutes > 0) hours++;
         if ((!cd.isShowH() || cd.isNoSpecificTime()) && hours > 0) days++;
         if (!cd.isShowD() && days > 0) weeks++;
         if (!cd.isShowW() && weeks > 0) months++;

@@ -51,9 +51,9 @@ public class Helpers {
         String mis = " " + r.getString(R.string.minutes) + " ";
         String ss = " " + r.getString(R.string.seconds) + " ";
 
-        dateTo.set(Calendar.SECOND, 0);
         dateTo.set(Calendar.MILLISECOND, 0);
         if (withoutTime) {
+            dateTo.set(Calendar.SECOND, 1);
             dateTo.set(Calendar.MINUTE, 0);
             dateTo.set(Calendar.HOUR, 0);
         }
@@ -68,9 +68,9 @@ public class Helpers {
         int months = ri.getMonths();
         int weeks = ri.getWeeks();
         int days = ri.getDays();
-        int hours = (withoutTime ? 23 : ri.getHours());
-        int minutes = (withoutTime ? 59 : ri.getMinutes());
-        int seconds = (withoutTime ? 59 : ri.getSeconds());
+        int hours = (withoutTime ? 0 : ri.getHours());
+        int minutes = (withoutTime ? 0 : ri.getMinutes());
+        int seconds = (withoutTime ? 1 : ri.getSeconds());
 
         if (years > 0 && !cd.isShowY()) {
             if (cd.isShowM()) months = months + years * 12;

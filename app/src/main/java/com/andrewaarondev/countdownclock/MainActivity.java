@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onItemSelected(final Countdown c, int position) {
+    public void onItemSelected(final Countdown c, int position, boolean fromListLoaded) {
         selectedItem = position;
         if (details != null && getResources().getBoolean(R.bool.widescreen)) {
-            if (!resuming) details.loadCountdown(c);
+            if (!resuming || fromListLoaded) details.loadCountdown(c);
         } else {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
