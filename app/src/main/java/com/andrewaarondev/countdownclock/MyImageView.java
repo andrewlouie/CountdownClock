@@ -76,10 +76,9 @@ public class MyImageView extends ImageView {
             cd.getDate().set(Calendar.SECOND, 1);
             cd.getDate().set(Calendar.MINUTE, 0);
             cd.getDate().set(Calendar.HOUR_OF_DAY, 0);
-        }
+        } else cd.getDate().set(Calendar.SECOND, 0);
         if (cd.isShowM()) ri = new RemainingInfo(Calendar.getInstance(), cd.getDate());
         else ri = new RemainingInfo(Calendar.getInstance(), cd.getDate(), true);
-
 
         int years = ri.getYears();
         int months = ri.getMonths();

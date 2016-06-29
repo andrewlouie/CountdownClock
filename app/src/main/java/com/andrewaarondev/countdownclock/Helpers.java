@@ -56,7 +56,7 @@ public class Helpers {
             dateTo.set(Calendar.SECOND, 1);
             dateTo.set(Calendar.MINUTE, 0);
             dateTo.set(Calendar.HOUR, 0);
-        }
+        } else cd.getDate().set(Calendar.SECOND, 0);
         if (dateFrom.getTimeInMillis() >= dateTo.getTimeInMillis()) return " ";
 
         RemainingInfo ri;
