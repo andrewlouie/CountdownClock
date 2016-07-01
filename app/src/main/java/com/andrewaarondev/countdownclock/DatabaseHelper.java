@@ -171,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 result.add(new Countdown(c.getInt(0), c.getString(1), c.getLong(2), c.getInt(3), c.getInt(4), (c.getInt(5) == 1), c.getInt(6), c.getInt(7), c.getInt(8), (c.getInt(9) == 1), (c.getInt(10) == 1), (c.getInt(11) == 1), (c.getInt(12) == 1), (c.getInt(13) == 1), (c.getInt(14) == 1), (c.getInt(15) == 1), (c.getInt(16) == 1)));
                 c.moveToNext();
             }
-            EventBus.getDefault().postSticky(new ListLoadedEvent(result));
+            EventBus.getDefault().post(new ListLoadedEvent(result));
             c.close();
         }
     }

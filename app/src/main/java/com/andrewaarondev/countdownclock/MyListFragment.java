@@ -27,7 +27,7 @@ public class MyListFragment extends
         super.onActivityCreated(state);
         if (getResources().getBoolean(R.bool.widescreen) && MainActivity.selectedItem == -1)
             MainActivity.selectedItem = 0;
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         DatabaseHelper db = DatabaseHelper.getInstance(this.getActivity().getBaseContext());
         db.getCountdowns();
     }
@@ -44,7 +44,7 @@ public class MyListFragment extends
 
     @Override
     public void onResume() {
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().registerSticky(this);
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         if (task == null) {
             task = new AddStringTask();
             task.execute();

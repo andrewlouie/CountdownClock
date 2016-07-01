@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -276,6 +275,12 @@ public class DetailsFragment extends Fragment implements
             fs.setVisibility(View.GONE);
             updateSliders();
             selectFont();
+            MyApplication myapp = (MyApplication) getActivity().getApplication();
+            if (myapp.getData() != null || myapp.getRequestCode() == CONTENT_REQUEST) {
+                onActivityResult(myapp.getRequestCode(), myapp.getResultCode(), myapp.getData());
+                myapp.setData(null);
+                myapp.setRequestCode(0);
+            }
         }
         loading = false;
     }
@@ -791,6 +796,13 @@ public class DetailsFragment extends Fragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (cd == null) {
+            MyApplication myapp = (MyApplication) getActivity().getApplication();
+            myapp.setData(data);
+            myapp.setRequestCode(requestCode);
+            myapp.setResultCode((resultCode));
+            return;
+        }
         if (requestCode == CONTENT_REQUEST) {
             if (resultCode == MainActivity.RESULT_OK) {
                 loadingImg();
@@ -801,7 +813,6 @@ public class DetailsFragment extends Fragment implements
                 Uri selectedImage = data.getData();
                 String url = data.getData().toString();
                 if (url.startsWith("content://com.google.android.apps.photos.content")) {
-                    OutputStream out = null;
                     try {
                         InputStream is = getActivity().getContentResolver().openInputStream(selectedImage);
                         loadingImg();
